@@ -1,35 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 function App() {
 
-  useEffect(() => {
-    async function ping() {
-      const pong = await(await fetch('/ping')).text()
+  const [ping, setPing] = useState('ping')
 
+  useEffect(() => {
+    async function getPing() {
+      const pong = await (await fetch('/ping')).text()
+      setPing(pong)
       console.log(pong)
     }
-    ping()
+    getPing()
   }, [])
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            {ping}
+          </p>
+          <Link to="/">hem</Link>
+          <Link to="/fiskar">fiskar</Link>
+
+        </header>
+        <Route path="/" exact render={(props) => <h1>{JSON.stringify(props)}</h1>} />
+        <Route path="/fiskar" render={(props) => <h1>FISKAR: {JSON.stringify(props)}</h1>} />
+      </div>
+    </Router>
   );
 }
 
