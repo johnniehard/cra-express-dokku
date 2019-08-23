@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
 
 function App() {
 
@@ -29,8 +29,11 @@ function App() {
           <Link to="/fiskar">fiskar</Link>
 
         </header>
-        <Route path="/" exact render={(props) => <h1>{JSON.stringify(props)}</h1>} />
-        <Route path="/fiskar" render={(props) => <h1>FISKAR: {JSON.stringify(props)}</h1>} />
+        <Switch>
+          <Route path="/" exact render={(props) => <h1>{JSON.stringify(props)}</h1>} />
+          <Route path="/fiskar" render={(props) => <h1>FISKAR: {JSON.stringify(props)}</h1>} />
+          <Route render={() => <h1>404 not found</h1>} />
+        </Switch>
       </div>
     </Router>
   );
