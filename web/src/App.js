@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
 
@@ -9,11 +8,28 @@ import checkAuth from './checkAuth'
 function Main({ history }) {
 
   const [auth, setAuth] = useState(false)
+  const [ping, setPing] = useState('ping')
+
   useEffect(() => {
     checkAuth(history, () => {
       setAuth(true)
     })
   }, [history])
+
+  useEffect(() => {
+    if (auth && ping !== 'pong') {
+      async function getPing() {
+        const pong = await (await fetch('/ping', {
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        })).text()
+        setPing(pong)
+      }
+      getPing()
+    }
+  }, [auth])
 
   if (!auth) {
     return <div className="App" />
@@ -21,14 +37,7 @@ function Main({ history }) {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-        </p>
-        <Link to="/">hem</Link>
-        <Link to="/fiskar">fiskar</Link>
-
-      </header>
+      <p>{ping}</p>
     </div>
   )
 }
@@ -42,8 +51,8 @@ function App() {
       <Switch>
         <Route path="/" exact component={Main} />
         <Route path="/login" exact component={Login} />
-        <Route path="/fiskar" render={(props) => <h1>FISKAR: {JSON.stringify(props)}</h1>} />
-        <Route render={() => <h1>404 not found</h1>} />
+
+        <Route render={() => <h1>not found</h1>} />
       </Switch>
     </Router >
   );
